@@ -26,6 +26,16 @@ export default function CartScreen() {
     const [groupedItems, setGroupedItems] = useState({});
     
     const [isSubmitting, setIsSubmitting] = useState(false);
+    
+    const getCategoryEmoji = (categoryId) => {
+        switch (categoryId) {
+            case 1: return '🍛';
+            case 2: return '🍲';
+            case 3: return '🍟';
+            case 4: return '🥤';
+            default: return '🍽️';
+        }
+        };
 
     
     useEffect(() => {
@@ -125,10 +135,11 @@ export default function CartScreen() {
                                 <Text className="font-bold" style={{color: themeColors.text}}>
                                     {items.length} x 
                                 </Text>
-                                <Image 
-                                    className="h-14 w-14 rounded-full" 
-                                    source={dish.image ? dish.image : require('../assets/images/pizzaDish.png')} 
-                                />
+                                <View className="h-12 w-12 rounded-full bg-orange-100 justify-center items-center">
+                                    <Text style={{ fontSize: 24 }}>
+                                        {getCategoryEmoji(dish.category_id)}
+                                    </Text>
+                                </View>
                                 <View className="flex-1">
                                     <Text className="font-bold text-gray-700">{dish.name}</Text>
                                     {dish.note ? (
