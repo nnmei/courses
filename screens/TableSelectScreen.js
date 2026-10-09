@@ -113,6 +113,46 @@ export default function TableSelectScreen() {
           </Text>
         </TouchableOpacity>
       </View>
+      {/* เพิ่มส่วนดูประวัติบิลเก่า */}
+      {selectedTable && (
+        <TouchableOpacity
+          style={{ paddingVertical: 10, alignItems: 'center' }}
+          onPress={async () => {
+            try {
+              const closedBills = await db.getAllAsync(
+                "SELECT bill_id, closed_at FROM bills WHERE table_id = ? AND status = 'closed' ORDER BY closed_at DESC LIMIT 5;",
+                [selectedTable.table_id]
+              );
+
+              if (!closedBills || closedBills.length === 0) {
+                Alert.alert('แจ้งเตือน', `โต๊ะ ${selectedTable.table_number} ยังไม่มีประวัติบิลที่ปิดแล้ว`);
+                return;
+              }
+
+              const buttons = closedBills.map((b) => ({
+                text: `บิล #${b.bill_id} (${new Date(b.closed_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })})`,
+                onPress: () => {
+                  navigation.navigate('Order', {
+                    tableId: selectedTable.table_id,
+                    tableNumber: selectedTable.table_number,
+                    billId: b.bill_id,
+                    isHistory: true,
+                  });
+                }
+              }));
+              buttons.push({ text: 'ยกเลิก', style: 'cancel' });
+
+              Alert.alert('เลือกประวัติบิลเก่า', `ประวัติบิลของโต๊ะ ${selectedTable.table_number}`, buttons);
+            } catch (err) {
+              console.error(err);
+            }
+          }}
+        >
+          <Text style={{ color: '#ea580c', fontSize: 13, textDecorationLine: 'underline' }}>
+            ดูประวัติบิลเก่า (โต๊ะ {selectedTable.table_number})
+          </Text>
+        </TouchableOpacity>
+      )}
 
       <BottomNav />
     </SafeAreaView>

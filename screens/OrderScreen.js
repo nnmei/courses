@@ -53,6 +53,11 @@ export default function OrderScreen({ route, navigation }) {
     <View style={OrderStyle.orderContainer}>
       <View style={OrderStyle.orderHeader}>
         <Text style={OrderStyle.orderTitle}>บิลโต๊ะที่ {tableNumber}</Text>
+        {route.params?.isHistory && (
+          <Text style={{ color: '#ef4444', fontWeight: 'bold', fontSize: 13, marginTop: 4 }}>
+            (ประวัติบิล)
+          </Text>
+        )}
       </View>
 
       <ScrollView style={{ flex: 1 }}>
