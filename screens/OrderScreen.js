@@ -9,7 +9,7 @@ const STATUS_TH = { pending: 'รอทำ', cooking: 'กำลังทำ', s
 
 export default function OrderScreen({ route, navigation }) {
   const db = useSQLiteContext();
-  const { tableId, billId, tableNumber } = route.params || {};
+  const { tableId, billId, tableNumber, isHistory } = route.params || {};
   const [billItems, setBillItems] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
 
@@ -85,23 +85,26 @@ export default function OrderScreen({ route, navigation }) {
       <View style={{ paddingVertical: 16, borderTopWidth: 1, borderColor: '#e2e8f0' }}>
         <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 12 }}>ยอดรวมทั้งหมด: {totalAmount.toLocaleString()} บาท</Text>
         
-        <View style={{ flexDirection: 'row', gap: 10 }}>
-          {/* ปุ่มสั่งอาหารเพิ่ม */}
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Home', { tableId, tableNumber })}
-            style={{ flex: 1, backgroundColor: '#ea580c', padding: 14, borderRadius: 8, alignItems: 'center' }}
-          >
-            <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold' }}>+ สั่งเพิ่ม</Text>
-          </TouchableOpacity>
+        {/* ครอบด้วย !isHistory เพื่อซ่อนปุ่มเวลาดูประวัติบิล */}
+        {!isHistory && (
+          <View style={{ flexDirection: 'row', gap: 10 }}>
+            {/* ปุ่มสั่งอาหารเพิ่ม */}
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Home', { tableId, tableNumber })}
+              style={{ flex: 1, backgroundColor: '#ea580c', padding: 14, borderRadius: 8, alignItems: 'center' }}
+            >
+              <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold' }}>+ สั่งเพิ่ม</Text>
+            </TouchableOpacity>
 
-          {/* ปุ่มปิดบิล */}
-          <TouchableOpacity
-            onPress={handleCloseBill}
-            style={{ flex: 1, backgroundColor: '#ef4444', padding: 14, borderRadius: 8, alignItems: 'center' }}
-          >
-            <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold' }}>ปิดบิล / คิดเงิน</Text>
-          </TouchableOpacity>
-        </View>
+            {/* ปุ่มปิดบิล */}
+            <TouchableOpacity
+              onPress={handleCloseBill}
+              style={{ flex: 1, backgroundColor: '#ef4444', padding: 14, borderRadius: 8, alignItems: 'center' }}
+            >
+              <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold' }}>ปิดบิล / คิดเงิน</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </View>
   );

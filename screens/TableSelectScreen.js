@@ -7,6 +7,7 @@ import { TBstyle } from '../constants/TBstyle';
 import { CardTable } from '../components/cardTable';
 import BottomNav from '../components/bottomNav';
 import { getAllTablesWithStatus } from '../db/tables';
+import { resetSalesData } from '../db/database';
 
 export default function TableSelectScreen() {
   const navigation = useNavigation();
@@ -64,6 +65,16 @@ export default function TableSelectScreen() {
 
       <View style={TBstyle.header}>
         <Text style={TBstyle.screenTitle}>สถานะโต๊ะอาหาร (15 โต๊ะ)</Text>
+        <TouchableOpacity
+            onPress={async () => {
+              await resetSalesData(db);
+              const data = await getAllTablesWithStatus(db);
+              setTables(data);
+              setSelectedTable(null);
+            }}
+          >
+            <Text style={{ color: '#ef4444', fontWeight: 'bold' }}>ล้างข้อมูล</Text>
+        </TouchableOpacity>
         <Text style={TBstyle.screenSubtitle}>
           แตะเลือกโต๊ะเพื่อสั่งอาหาร หรือดูบิลที่ค้างอยู่
         </Text>
